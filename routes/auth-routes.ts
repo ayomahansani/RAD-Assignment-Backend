@@ -1,6 +1,6 @@
 import express from "express";
 import {createUser, verifyUserCredentials} from "../database/user-client";
-import {User} from "../model/user";
+import {User} from "../models/User";
 import jwt, {Secret} from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
