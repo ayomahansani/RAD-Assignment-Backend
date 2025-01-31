@@ -1,19 +1,18 @@
 import express from "express";
-import {createUser, verifyUserCredentials} from "../database/user-client";
 import {User} from "../models/User";
 import jwt, {Secret} from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import {createUser, verifyUserCredentials} from "../database/prisma-data-store/user-data";
 
 dotenv.config();
 
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
-    console.log('Login')
-    const username = req.body.username;
-    const password = req.body.password;
+    console.log('Login Request Received');
 
-    const user : User = {username, password};
+    const { username, password } = req.body;
+    const user: User = { username, password, firstName: '', lastName: '' }; // firstName & lastName are not needed for login
 
     try{
        const isVerified =  await verifyUserCredentials(user);
@@ -33,21 +32,19 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/register", async (req, res) => {
-    console.log('Register', req.body);
-    const username = req.body.username;
-    const password = req.body.password;
+    console.log('Register Request Received', req.body);
 
-    const user : User = {username, password};
+    const { firstName, lastName, username, password } = req.body;
+    const user: User = { firstName, lastName, username, password };
 
-    try{
+    try {
         const registration = await createUser(user);
         res.status(201).json(registration);
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(401).json(err);
     }
-
-})
+});
 
 router.post("/refresh-token", async (req, res) => {
     const authHeader = req.headers.authorization;
