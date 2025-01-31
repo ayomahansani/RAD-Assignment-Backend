@@ -1,8 +1,7 @@
 import express from 'express'
 
-const app = express();
 
-// database connection
+const app = express();
 
 app.use(express.json())
 
@@ -14,7 +13,7 @@ app.use('/', (req, res, next)=>{
     next();
 })
 
-app.use('/field')
+app.use('/flower')
 
 app.listen(3000, (err =>{
     console.log("Server running on port 3000");
