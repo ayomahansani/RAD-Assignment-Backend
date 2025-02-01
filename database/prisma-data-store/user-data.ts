@@ -4,7 +4,15 @@ import {User} from "../../models/User";
 
 const prisma = new PrismaClient();
 
-export async function createUser(user : User) {
+export async function createUser(user: User) {
+    const existingUser = await prisma.user.findUnique({
+        where: { username: user.username },
+    });
+
+    if (existingUser) {
+        throw new Error("Username already exists. Try another username.");
+    }
+
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
     const addedUser = await prisma.user.create({
@@ -15,6 +23,7 @@ export async function createUser(user : User) {
             password: hashedPassword,
         },
     });
+
     console.log("User created:", addedUser);
     return addedUser;
 }

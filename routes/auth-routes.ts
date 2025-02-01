@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/register", async (req, res) => {
-    console.log('Register Request Received', req.body);
+    console.log("Register Request Received", req.body);
 
     const { firstName, lastName, username, password } = req.body;
     const user: User = { firstName, lastName, username, password };
@@ -40,9 +40,9 @@ router.post("/register", async (req, res) => {
     try {
         const registration = await createUser(user);
         res.status(201).json(registration);
-    } catch (err) {
-        console.log(err);
-        res.status(401).json(err);
+    } catch (err: any) {
+        console.log(err.message);
+        res.status(400).json({ message: err.message });
     }
 });
 
