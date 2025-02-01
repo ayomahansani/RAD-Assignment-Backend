@@ -22,7 +22,8 @@ router.post("/login", async (req, res) => {
            const refreshToken = jwt.sign({ username }, process.env.REFRESH_TOKEN as Secret, {expiresIn: "7d"});
            res.json({accessToken : token, refreshToken : refreshToken});
        }else{
-           res.sendStatus(403).send('Invalid credentials')
+           console.log("Invalid credentials! Try again.");
+           res.status(403).json({ message: "Invalid credentials! Try again." }); // Send JSON response
        }
     }catch(err){
         console.log(err);
