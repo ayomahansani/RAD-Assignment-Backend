@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import {Flower} from "../models/Flower";
-import {FlowerAdd, FlowerDelete, FlowerUpdate} from "../database/prisma-data-store/flower-data";
+import {FlowerAdd, FlowerDelete, FlowerUpdate, getAllFlowers} from "../database/prisma-data-store/flower-data";
 
 dotenv.config();
 
@@ -45,6 +45,16 @@ router.put("/update/:flower_code", async (req, res) => {
     } catch (error) {
         console.error("Error updating flower : ", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+})
+
+// get all flowers
+router.get("/view", async (req, res) => {
+    try {
+        const flowers = await getAllFlowers();
+        res.json(flowers);
+    } catch(error){
+        console.log("Error getting flowers : ", error);
     }
 })
 

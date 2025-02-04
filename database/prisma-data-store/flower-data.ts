@@ -60,6 +60,15 @@ export async function FlowerUpdate(flowerCode: number, f: Flower) {
     }
 }
 
+// get all flowers
+export async function getAllFlowers() {
+    try {
+        return await prisma.flower.findMany();
+    } catch(error){
+        console.log("Error getting customers : ", error);
+    }
+}
+
 
 
 
