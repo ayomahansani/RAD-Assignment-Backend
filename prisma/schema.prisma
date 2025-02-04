@@ -20,3 +20,13 @@ model User {
   username  String @unique
   password  String
 }
+
+model Flower {
+  flower_code        Int    @id @default(autoincrement())
+  flower_name        String
+  flower_image       String
+  flower_size        String
+  flower_colour      String
+  flower_unit_price  Int
+  flower_qty_on_hand Int
+}
