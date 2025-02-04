@@ -3,7 +3,8 @@ import {Flower} from "../../models/Flower";
 
 const prisma = new PrismaClient();
 
-export async function FlowerAdd(f: Flower){
+// save flower
+export async function FlowerAdd(f: Flower) {
     try {
         const newFlower = await prisma.flower.create({
             data: {
@@ -22,3 +23,29 @@ export async function FlowerAdd(f: Flower){
         return null;
     }
 }
+
+// delete flower
+export async function FlowerDelete(flowerCode: number) {
+    try {
+        const deletedFlower = await prisma.flower.delete({
+            where: { flower_code: flowerCode},
+        });
+        console.log("Flower deleted:", flowerCode);
+        return deletedFlower;
+    } catch (error) {
+        console.error("Error deleting flower : ", error);
+        throw new Error("Failed to delete flower"); // Throw the error for proper handling
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
