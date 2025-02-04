@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import {Flower} from "../models/Flower";
-import {FlowerAdd, FlowerDelete} from "../database/prisma-data-store/flower-data";
+import {FlowerAdd, FlowerDelete, FlowerUpdate} from "../database/prisma-data-store/flower-data";
 
 dotenv.config();
 
@@ -30,6 +30,23 @@ router.delete("/delete/:flower_code", async (req, res) => {
         console.log("Error deleting flower : ", error);
     }
 });
+
+// update flower
+router.put("/update/:flower_code", async (req, res) => {
+    const flowerCode : number = +req.params.flower_code; // Convert string to number using +
+    const flower: Flower = req.body;
+    try {
+        const updatedFlower = await FlowerUpdate(flowerCode, flower);
+        if(updatedFlower) {
+            res.json(updatedFlower);
+        } else {
+            res.status(404).json({ message: "Flower not found" });
+        }
+    } catch (error) {
+        console.error("Error updating flower : ", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+})
 
 
 export default router;
