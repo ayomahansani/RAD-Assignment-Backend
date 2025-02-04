@@ -1,5 +1,5 @@
 export interface Flower {
-    flower_code: number;
+    flower_code?: number;
     flower_name: string;
     flower_image: string;
     flower_size: string;
