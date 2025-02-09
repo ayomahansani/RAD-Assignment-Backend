@@ -42,23 +42,6 @@ router.post("/add", upload.single("flower_image"), async (req, res) => {
     }
 });
 
-// update flower
-/*router.put("/update/:flower_code", async (req, res) => {
-    const flowerCode : number = +req.params.flower_code; // Convert string to number using +
-    const flower: Flower = req.body;
-    try {
-        const updatedFlower = await FlowerUpdate(flowerCode, flower);
-        if(updatedFlower) {
-            res.json(updatedFlower);
-        } else {
-            res.status(404).json({ message: "Flower not found" });
-        }
-    } catch (error) {
-        console.error("Error updating flower : ", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-})*/
-
 // Update flower (with optional image update)
 router.put("/update/:flower_code", upload.single("flower_image"), async (req, res) => {
     console.log('Request body:', req.body);
@@ -98,9 +81,6 @@ router.put("/update/:flower_code", upload.single("flower_image"), async (req, re
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
-
-
 
 // delete flower
 router.delete("/delete/:flower_code", async (req, res) => {

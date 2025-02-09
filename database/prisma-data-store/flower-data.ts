@@ -25,27 +25,6 @@ export async function FlowerAdd(f: Flower) {
 }
 
 // update flower
-/*export async function FlowerUpdate(flowerCode: number, f: Flower) {
-    try {
-        const updatedFlower = await prisma.flower.update({
-            where: { flower_code: flowerCode},
-            data: {
-                flower_name: f.flower_name,
-                flower_image: f.flower_image,
-                flower_size: f.flower_size,
-                flower_colour: f.flower_colour,
-                flower_unit_price: f.flower_unit_price,
-                flower_qty_on_hand: f.flower_qty_on_hand,
-            }
-        });
-        console.log("Flower updated : ", updatedFlower);
-        return updatedFlower;
-    } catch (error) {
-        console.error("Error updating flower : ", error);
-        return null;
-    }
-}*/
-
 export async function FlowerUpdate(flowerCode: number, f: Partial<Flower>) {
     try {
         // Ensure the flower exists before updating
@@ -83,16 +62,27 @@ export async function FlowerUpdate(flowerCode: number, f: Partial<Flower>) {
 // delete flower
 export async function FlowerDelete(flowerCode: number) {
     try {
-        const deletedFlower = await prisma.flower.delete({
-            where: { flower_code: flowerCode},
+        // Check if the flower exists before deleting
+        const flowerExists = await prisma.flower.findUnique({
+            where: { flower_code: flowerCode },
         });
-        console.log("Flower deleted : ", flowerCode);
+
+        if (!flowerExists) {
+            throw new Error("Flower not found");
+        }
+
+        const deletedFlower = await prisma.flower.delete({
+            where: { flower_code: flowerCode },
+        });
+
+        console.log("Flower deleted:", flowerCode);
         return deletedFlower;
     } catch (error) {
-        console.error("Error deleting flower : ", error);
-        throw new Error("Failed to delete flower"); // Throw the error for proper handling
+        console.error("Error deleting flower:", error);
+        throw new Error("Failed to delete flower");
     }
 }
+
 
 // get all flowers
 export async function getAllFlowers() {
