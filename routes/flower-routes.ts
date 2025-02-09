@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import multer from "multer";
 import {Flower} from "../models/Flower";
 import {FlowerAdd, FlowerDelete, FlowerUpdate, getAllFlowers} from "../database/prisma-data-store/flower-data";
 
@@ -7,15 +8,36 @@ dotenv.config();
 
 const router = express.Router();
 
-// save flower
-router.post("/add", async (req, res) => {
+// Configure Multer for file uploads (store in memory for Base64 conversion)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Save flower (with image processing)
+router.post("/add", upload.single("flower_image"), async (req, res) => {
     console.log('Request body : ', req.body);
-    const flower: Flower = req.body;
+    console.log('Uploaded file : ', req.file);
+
     try {
+        const { flower_name, flower_size, flower_colour, flower_unit_price, flower_qty_on_hand } = req.body;
+
+        let base64Image: string = ""; // Ensure it's always a string
+        if (req.file) {
+            base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+        }
+
+        const flower: Flower = {
+            flower_name,
+            flower_image: base64Image, // No TypeScript error now
+            flower_size,
+            flower_colour,
+            flower_unit_price: parseFloat(flower_unit_price),
+            flower_qty_on_hand: parseInt(flower_qty_on_hand, 10),
+        };
+
         const addedFlower = await FlowerAdd(flower);
         res.status(201).json(addedFlower);
     } catch (error) {
-        console.log("Error adding flower : ", error);
+        console.log("Error adding flower: ", error);
         res.status(400).json({ error: "Error adding flower" });
     }
 });
