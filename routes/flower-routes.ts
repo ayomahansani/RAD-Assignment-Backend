@@ -9,7 +9,7 @@ const router = express.Router();
 
 // save flower
 router.post("/add", async (req, res) => {
-    console.log(req.body);
+    console.log('Request body : ', req.body);
     const flower: Flower = req.body;
     try {
         const addedFlower = await FlowerAdd(flower);
@@ -23,6 +23,7 @@ router.post("/add", async (req, res) => {
 // delete flower
 router.delete("/delete/:flower_code", async (req, res) => {
     const flowerCode : number = +req.params.flower_code; // Convert string to number using +
+    console.log('flowerCode : ', flowerCode)
     try {
         const deletedFlower = await FlowerDelete(flowerCode);
         res.json(deletedFlower);
