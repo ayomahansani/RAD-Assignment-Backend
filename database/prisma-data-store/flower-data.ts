@@ -24,22 +24,8 @@ export async function FlowerAdd(f: Flower) {
     }
 }
 
-// delete flower
-export async function FlowerDelete(flowerCode: number) {
-    try {
-        const deletedFlower = await prisma.flower.delete({
-            where: { flower_code: flowerCode},
-        });
-        console.log("Flower deleted : ", flowerCode);
-        return deletedFlower;
-    } catch (error) {
-        console.error("Error deleting flower : ", error);
-        throw new Error("Failed to delete flower"); // Throw the error for proper handling
-    }
-}
-
 // update flower
-export async function FlowerUpdate(flowerCode: number, f: Flower) {
+/*export async function FlowerUpdate(flowerCode: number, f: Flower) {
     try {
         const updatedFlower = await prisma.flower.update({
             where: { flower_code: flowerCode},
@@ -57,6 +43,54 @@ export async function FlowerUpdate(flowerCode: number, f: Flower) {
     } catch (error) {
         console.error("Error updating flower : ", error);
         return null;
+    }
+}*/
+
+export async function FlowerUpdate(flowerCode: number, f: Partial<Flower>) {
+    try {
+        // Ensure the flower exists before updating
+        const existingFlower = await prisma.flower.findUnique({
+            where: { flower_code: flowerCode }
+        });
+
+        if (!existingFlower) {
+            console.warn("Flower not found:", flowerCode);
+            return null;
+        }
+
+        const updatedFlower = await prisma.flower.update({
+            where: { flower_code: flowerCode },
+            data: {
+                flower_name: f.flower_name,
+                flower_image: f.flower_image ?? existingFlower.flower_image, // Keep old image if no new image provided
+                flower_size: f.flower_size,
+                flower_colour: f.flower_colour,
+                flower_unit_price: f.flower_unit_price,
+                flower_qty_on_hand: f.flower_qty_on_hand,
+            }
+        });
+
+        console.log("Flower updated:", updatedFlower);
+        return updatedFlower;
+    } catch (error) {
+        console.error("Error updating flower:", error);
+        return null;
+    }
+}
+
+
+
+// delete flower
+export async function FlowerDelete(flowerCode: number) {
+    try {
+        const deletedFlower = await prisma.flower.delete({
+            where: { flower_code: flowerCode},
+        });
+        console.log("Flower deleted : ", flowerCode);
+        return deletedFlower;
+    } catch (error) {
+        console.error("Error deleting flower : ", error);
+        throw new Error("Failed to delete flower"); // Throw the error for proper handling
     }
 }
 
