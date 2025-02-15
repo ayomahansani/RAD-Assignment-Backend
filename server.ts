@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import authRoutes, {authenticateToken} from "./routes/auth-routes";
 import flowerRoutes from "./routes/flower-routes";
+import customerRoutes from "./routes/customer-routes";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ console.log("Loaded SECRET_KEY:", process.env.SECRET_KEY);
 
 app.use('/auth', authRoutes);
 app.use('/flower', flowerRoutes);
+app.use('/customer', customerRoutes);
 
 app.use(authenticateToken);
 
