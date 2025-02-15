@@ -1,12 +1,22 @@
 import express from "express";
-import {getAllOrders} from "../database/prisma-data-store/order-data";
+import {getAllOrders, OrderAdd} from "../database/prisma-data-store/order-data";
+import {Order} from "../models/Order";
 
 const router = express.Router();
 
 
 // save order
 router.post("/add", async (req, res) => {
-    const order = req.body;
+    const order: Order = req.body;
+    console.log("Order : ", order)
+
+    try {
+        const addedOrder = await OrderAdd(order);
+        res.send(addedOrder);
+    } catch (error) {
+        console.log("Error adding order : ", error);
+        res.status(400).json({ error: "Error adding order" });
+    }
 })
 
 

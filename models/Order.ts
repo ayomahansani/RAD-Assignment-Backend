@@ -1,10 +1,10 @@
-import {OrderDetails} from "./OrderDetails";
+import {OrderDetail} from "./OrderDetail";
 
 export interface Order {
     order_id?: number;
     customer_email: string;
     order_date: string;
-    order_items: OrderDetails[]; // List of items in the placeOrder
+    order_items: OrderDetail[]; // List of items in the placeOrder
     wrapping_charges: number;
     decoration_charges: number;
     sub_total: number;
