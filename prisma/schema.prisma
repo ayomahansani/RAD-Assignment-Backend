@@ -47,3 +47,12 @@ model Order {
   paid_amount        Decimal
   balance            Decimal
 }
+
+model OrderDetails {
+  order_details_id Int     @id @default(autoincrement())
+  order_id         Int // Foreign key to Order
+  item             String
+  quantity         Int
+  unitPrice        Decimal
+  total            Decimal
+}
