@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 // save order
 export async function OrderAdd(order: Order) {
     try {
+        // create the order
         const newOrder = await prisma.order.create({
             data: {
                 customer_email: order.customer_email,
@@ -21,6 +22,7 @@ export async function OrderAdd(order: Order) {
             },
         });
 
+        // save the order details
         let savedOrderDetails = await prisma.orderDetail.createMany({
             data: order.order_items.map((item) => ({
                 order_id: newOrder.order_id,
@@ -30,6 +32,18 @@ export async function OrderAdd(order: Order) {
                 total: item.total,
             })),
         });
+
+        // Update flower quantities based on order items
+        for (const item of order.order_items) {
+            await prisma.flower.updateMany({
+                where: { flower_code: parseInt(item.item, 10) }, // Convert item to a number
+                data: {
+                    flower_qty_on_hand: {
+                        decrement: item.quantity, // Reduce quantity by the ordered amount
+                    },
+                },
+            });
+        }
 
         console.log("Order Added : ", newOrder);
         return newOrder;
