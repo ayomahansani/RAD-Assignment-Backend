@@ -5,6 +5,7 @@ import authRoutes, {authenticateToken} from "./routes/auth-routes";
 import flowerRoutes from "./routes/flower-routes";
 import customerRoutes from "./routes/customer-routes";
 import orderRoutes from "./routes/order-routes";
+import supplierRoutes from "./routes/supplier-routes";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/auth', authRoutes);
 app.use('/flower', flowerRoutes);
 app.use('/customer', customerRoutes);
 app.use('/order', orderRoutes);
+app.use('/supplier', supplierRoutes);
 
 app.use(authenticateToken);
 
