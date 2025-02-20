@@ -56,3 +56,18 @@ model OrderDetail {
   unitPrice       Decimal
   total           Decimal
 }
+
+model Supplier {
+  supplier_id      Int    @id @default(autoincrement())
+  supplier_name    String
+  supplier_phone   String
+  supplier_email   String
+  supplier_address String
+}
+
+model SuppliersAndFlowersDetails {
+  supplier_flower_detail_id Int @id @default(autoincrement())
+  supplier_id               Int // Foreign key to Supplier
+  flower_code               Int
+  flower_qty_on_hand        Int
+}
